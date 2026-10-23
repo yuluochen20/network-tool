@@ -2773,6 +2773,14 @@ class App:
             messagebox.showerror("错误", f"导出失败：{e}")
 
 
+def _app_icon_path():
+    """图标文件路径：打包后从 _MEIPASS 取，开发时从脚本目录取"""
+    import os, sys
+    base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    p = os.path.join(base, "app_icon.ico")
+    return p if os.path.exists(p) else None
+
+
 def main():
     # 高分屏清晰化：不声明 DPI 感知会被系统拉伸导致字体发虚
     try:
@@ -2788,6 +2796,12 @@ def main():
         root.tk.call("tk", "scaling", root.winfo_fpixels("1i") / 72.0)
     except Exception:
         pass
+    icon = _app_icon_path()
+    if icon:
+        try:
+            root.iconbitmap(icon)      # 窗口标题栏 + 任务栏图标
+        except Exception:
+            pass
     App(root)
     root.mainloop()
 
