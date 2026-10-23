@@ -1947,11 +1947,6 @@ class App:
         self.tree.bind("<Double-1>", self.on_device_double_click)
         self.tree.bind("<Button-3>", self.on_device_right_click)
 
-        self._add_tip(tab,
-            "组播发现(SADP/ONVIF/心跳)＋Ping/端口扫描＋Web指纹；"
-            "SADP/ONVIF 能发现同层网络任意网段的设备（含改错IP）。"
-            "右键设备可直接打开管理网页。", row=4)
-
     # ==================== 海康 / 大华 独立页 ====================
     def _sort_tree(self, which, col):
         """点击表头排序：同列再点切换 升/降"""
@@ -2120,10 +2115,6 @@ class App:
                  "mac": ("MAC地址", 125)}
         self.hik_tree = self._make_tree(tab, cols, heads, 2, "hik")
 
-        self._add_tip(tab,
-            "SADP 组播可发现同层网络内任意网段的设备（含改错IP、未初始化）。"
-            "搜不到时查：同一交换机/VLAN、Windows 防火墙、设备组播开关。", row=3)
-
     def _fill_hik_row(self, r, idx=None):
         self.hik_tree.insert("", "end", values=(
             idx or len(self.hik_records), r["ip"], r["model"], r["serial"],
@@ -2238,12 +2229,6 @@ class App:
                  "model": ("型号", 165), "version": ("版本号", 145),
                  "serial": ("序列号", 170), "source": ("来源", 120)}
         self.dahua_tree = self._make_tree(tab, cols, heads, 3, "dahua")
-
-        self._add_tip(tab,
-            "「搜索大华设备」=ConfigTool 同款协议，搜完自动停；"
-            "「指定IP→单播探测」只查填的 IP，不发广播（可填多个或整段 1.1-254、1.0/24）；"
-            "「扫描该范围」只扫范围内地址。"
-            "都搜不到时：先确认能 ping 通，再查防火墙是否放行本程序入站 UDP。", row=4)
 
     def _fill_dahua_row(self, r, idx=None):
         self.dahua_tree.insert("", "end", values=(
