@@ -1268,7 +1268,7 @@ class App:
         self.hik_ifaces = None          # 本次海康搜索使用的网卡
         self._tip_labels = []           # 底部说明文字（随窗口宽度自动换行）
 
-        root.title("网络工具 - 批量Ping / 局域网设备发现")
+        root.title("网络工具")
         root.geometry("880x700")
         root.minsize(720, 620)
         root.resizable(True, True)
