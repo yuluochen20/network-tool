@@ -2646,25 +2646,18 @@ class App:
 
             self.q.put(("dev_progress", gen,
                         f"第 5 步：正在识别 {len(candidates)} 台设备的类型 ..."))
-            results = []
+            count = 0
             with ThreadPoolExecutor(max_workers=32) as ex:
                 for dev in ex.map(probe, candidates):
                     # 过滤 ARP 残留：既 ping 不通、又没有开放端口的条目不是有效设备
                     if not dev["alive"] and dev["ports"] == "-":
                         continue
-                    results.append(dev)
+                    count += 1
                     self.q.put(("dev_progress", gen,
-                                f"正在识别设备：{dev['ip']}  已确认 {len(results)} 台"))
-
-            # 视频监控设备排前面，其余按 IP 排序
-            def sort_key(d):
-                video = 0 if d["dtype"].startswith(("视频", "摄像机", "录像机")) else 1
-                return (video, ip_to_int(d["ip"]))
-
-            results.sort(key=sort_key)
-            for dev in results:
-                self.q.put(("dev_add", gen, dev))
-            self.q.put(("dev_done", gen, len(results)))
+                                f"正在识别设备：{dev['ip']}  已确认 {count} 台"))
+                    # 边识别边出结果（表格按当前排序规则保持有序）
+                    self.q.put(("dev_add", gen, dev))
+            self.q.put(("dev_done", gen, count))
         except Exception as e:
             self.q.put(("dev_progress", gen, f"设备发现出错：{e}"))
             self.q.put(("dev_done", gen, len(self.devices)))
