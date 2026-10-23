@@ -1822,7 +1822,7 @@ class App:
             online, lat, ts = r
             text = (f"IP: {ip}\n状态: {'在线' if online else '超时/不在线'}\n"
                     f"延迟: {lat if lat is not None else '-'} ms\n"
-                    f"扫描时间: {ts}\n(单击=长Ping，右键=菜单：打开网页等)")
+                    f"扫描时间: {ts}")
         tip.show(text, event)
 
     def open_long_ping(self, idx):
