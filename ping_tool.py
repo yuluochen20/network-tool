@@ -1320,15 +1320,15 @@ class App:
         ttk.Button(bar, text="关于", width=4,
                    command=self.show_about).pack(side="left", padx=(6, 4), pady=2)
         self.status = ttk.Label(
-            bar, text="就绪 — 单击单元格长Ping，右键可打开网页/长Ping/复制IP",
+            bar, text="就绪",
             padding=(10, 4), relief="sunken", anchor="w")
         self.status.pack(side="left", fill="x", expand=True)
         ttk.Label(bar, text="网卡:").pack(side="right", pady=3)
-        self.cb_iface = ttk.Combobox(bar, state="readonly", width=30,
+        self.cb_iface = ttk.Combobox(bar, state="readonly", width=26,
                                      font=("Microsoft YaHei", 9))
         self.cb_iface.pack(side="right", padx=(4, 8), pady=3)
         self.cb_iface.bind("<<ComboboxSelected>>", self.on_iface_change)
-        ttk.Button(bar, text="刷新网卡", width=8,
+        ttk.Button(bar, text="刷新", width=5,
                    command=self._load_ifaces).pack(side="right", padx=(4, 0))
         self._load_ifaces()
 
@@ -1675,8 +1675,7 @@ class App:
         self.hik_bar.stop()
         self._save_hist()
         self.status.config(
-            text=f"海康设备搜索完成 — 共 {count} 台"
-                 f"（双击=长Ping，右键=打开网页）")
+            text=f"海康设备搜索完成 — 共 {count} 台")
 
     def poll_queue(self):
         try:
@@ -1707,8 +1706,7 @@ class App:
                             self.btn_dev_export.config(state="normal")
                             self.dev_bar.stop()
                             self.status.config(
-                                text=f"设备发现完成 — 共发现 {count} 台设备"
-                                     f"（双击=长Ping，右键=打开网页/复制）")
+                                text=f"设备发现完成 — 共发现 {count} 台设备")
                     elif msg[0] == "hik_add":
                         _, ip, dev, mac = msg
                         # 排队逐行出现（SADP 一轮会同时回十几台，一起插入会"一下全跳出来"）
@@ -1717,16 +1715,9 @@ class App:
                         _, count = msg
                         self._hik_rows.append(("done", count))
                     elif msg[0] == "passive_info":
-                        ports = msg[1]
                         if not (self.dahua_running or self.scanning
                                 or self.dev_scanning or self.hik_running):
-                            note = ("" if 5050 in ports
-                                    else "；5050 被系统服务占据，回固定端口的老固件可能漏发现")
-                            self.status.config(
-                                text="就绪 — 常驻监听已开启（UDP "
-                                     + "/".join(str(p) for p in ports) + note
-                                     + "），设备主动上报会自动收进「大华设备」页；"
-                                       "单击单元格长Ping，右键可打开网页")
+                            self.status.config(text="就绪")
                     elif msg[0] == "dahua_add":
                         _, ip, dev = msg
                         exist = next((r for r in self.dahua_records
@@ -1775,8 +1766,7 @@ class App:
                             tip += ("；注意：UDP 5050 被系统服务(CDPSvc)占用，"
                                     "回固定 5050 的老固件可能漏发现")
                         self.status.config(
-                            text=f"大华搜索结束 — {tip}"
-                                 f"（双击=长Ping，右键=打开网页）")
+                            text=f"大华搜索结束 — {tip}")
                         self._save_hist()
 
                     elif msg[0] == "dahua_scan_done":
@@ -1787,9 +1777,7 @@ class App:
                         self.dahua_bar.stop()
                         self._save_hist()
                         self.status.config(
-                            text=f"大华扫描完成（{getattr(self, 'dahua_scan_desc', '')}）— "
-                                 f"发现 {count} 台（37777 端口或 80+554 同开的设备）"
-                                 f"＋协议单播结果；双击=长Ping，右键=打开网页")
+                            text=f"大华扫描完成 — 发现 {count} 台")
             except queue.Empty:
                 pass
 
@@ -1805,8 +1793,7 @@ class App:
                     self.btn_scan.config(state="normal")
                     self.btn_export.config(state="normal")
                     self.status.config(
-                        text=f"扫描完成 — 在线 {online_cnt} 台 / 共 256 个地址"
-                             f"    （单击=长Ping，右键=菜单）")
+                        text=f"扫描完成 — 在线 {online_cnt} 台 / 共 256 个地址")
         except Exception:
             pass          # 任何 UI 更新异常都不能让消息泵停摆
         finally:
